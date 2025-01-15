@@ -27,7 +27,29 @@ class Categories{
         }    
     }
 
-    
+    public function deleteCategory($id){
+
+        $deleteCategory = OrmMethodes::DeleteItem($this->table,$id);
+        return $deleteCategory;
+        if($deleteCategory){
+            header("refresh:0");
+        }
+    } 
+
+    public function findCategoryById($id){
+
+        $findCategoryById = OrmMethodes::findById($this->table,$id);
+        return $findCategoryById;
+    }
+
+    public function updateCategory($name,$id){
+
+        $column = "categorie_name = '$name'";
+
+        $updateCategory = OrmMethodes::update($this->table,$column,$id);
+        return $updateCategory;
+
+    }
 
 
 

@@ -27,9 +27,31 @@ class Tags{
 
     }
 
-    
+    public function deletTag($id){
 
+        $deletTag = OrmMethodes::DeleteItem($this->table,$id);
+        return $deletTag;
+    } 
 
+    public function findTagById($id){
+
+        $findTagById=OrmMethodes::findById($this->table,$id);
+        return $findTagById;
+    }
+
+    public function updateTag($tagName,$id){
+
+        $columns = "tag_name = '$tagName'";
+        $update = OrmMethodes::update($this->table,$columns,$id);
+        return $update;
+    }
+
+    public function countTags(){
+
+        $countTags=OrmMethodes::countItems($this->table);
+        return $countTags;
+
+    }
 
 
 

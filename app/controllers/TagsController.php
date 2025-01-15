@@ -25,7 +25,37 @@ public function create(){
 
 }
 
-
+public function destroy(){
+    if(isset($_GET['id'])){
+          $id = $_GET['id'];
+          $destroy=$this->deletTag($id);
+          return $destroy;
+          var_dump($destroy);
+    }
+  }
+  
+  public function edite(){
+  
+      if(isset($_GET['id'])){
+          $id = $_GET['id'];
+          $edite=$this->findTagById($id);
+          return $edite;
+      }
+  }
+  
+  
+  public function update(){
+  
+      if(isset($_POST['updateTag'])){
+          $id = $_GET['id'];
+          $this->tagName = $_POST['tag_name'];
+          $update = $this->updateTag($this->tagName,$id);
+          return $update;
+          if($update){
+              header("tags.php");
+          }
+      }
+  }
 
 
 

@@ -1,3 +1,15 @@
+<?php 
+require_once __DIR__."/../../../../../vendor/autoload.php";
+
+use App\Controllers\TagsController;
+
+$Newtags = new TagsController();
+$tags = $Newtags->show();
+$create= $Newtags->create();
+$destroy=$Newtags->destroy();
+
+
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 

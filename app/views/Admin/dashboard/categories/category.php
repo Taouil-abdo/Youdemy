@@ -1,3 +1,16 @@
+<?php 
+require_once __DIR__."/../../../../../vendor/autoload.php";
+
+use App\Controllers\CategoriesController;
+
+$NewCaty = new CategoriesController();
+$categories = $NewCaty->show();
+$create= $NewCaty->create();
+$destroy=$NewCaty->destroy();
+
+var_dump($destroy);
+
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 

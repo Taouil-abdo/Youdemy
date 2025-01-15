@@ -51,8 +51,12 @@ class Categories{
 
     }
 
+    public function countCategory(){
 
+        $countcategory=OrmMethodes::countItems($this->table);
+        return $countcategory;
 
+    }
 
 
 

@@ -9,6 +9,7 @@ $create= $Newtags->create();
 $destroy=$Newtags->destroy();
 
 
+
  ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +19,8 @@ $destroy=$Newtags->destroy();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/f01941449c.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+
     <title>tags</title>
 </head>
 
@@ -28,11 +31,11 @@ $destroy=$Newtags->destroy();
         <!-- sidebar -->
         <div class="hidden md:flex flex-col w-64 bg-gray-800">
             <div class="flex items-center justify-center h-16 bg-gray-900">
-                <span class="text-white font-bold uppercase">YouDemy</span>
+            <a href="../../../../../index.php"><span class="text-white font-bold uppercase">YouDemy</span></a>
             </div>
             <div class="flex flex-col flex-1 overflow-y-auto">
                 <nav class="flex-1 px-4 py-4">
-                    <a href="../../dashboard.php"
+                    <a href="../dashboard.php"
                         class="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 rounded-md">
                         <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                     </a>
@@ -70,23 +73,28 @@ $destroy=$Newtags->destroy();
         </div>
 
         <!-- Main content -->
-        <div class="flex flex-col flex-1 overflow-y-auto">
-        <div class="bg-white border-gray-200 dark:bg-gray-900">
+        <div class="flex flex-col flex-1">
+
+            <!-- Top Navigation -->
+            <div class="bg-white border-gray-200 dark:bg-gray-900">
                 <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">                    
                     <!-- --------------- RightNav ----------------------------- -->
                     <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                         <div class="flex items-center gap-4">
                             <?php if(isset($_SESSION['role'])){ ?>
-                            <?php  if($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'user' || $_SESSION['role'] == 'author') { ?>
-                            <button type="button"
-                                class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                                id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
-                                data-dropdown-placement="bottom">
-                                <span class="sr-only">Open user menu</span>
-                                <img class="w-8 h-8 rounded-full" src="https://tailwindcss.com/img/jonathan.jpg"
-                                    alt="user photo">
-                            </button>
-                            <?php } ?>
+                             <?php  if($_SESSION['role'] == 'Admin' || $_SESSION['role'] == 'Student' || $_SESSION['role'] == 'Teacher') { ?>
+                                <button class="p-2 text-gray-500 hover:text-gray-700 focus:outline-none">
+                                <i class="fas fa-bell"></i>
+                                </button>
+                              
+                                <button type="button"
+                                     class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                                     id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
+                                     data-dropdown-placement="bottom">
+                                     <span class="sr-only">Open user menu</span>
+                                     <img class="w-8 h-8 rounded-full" src="https://tailwindcss.com/img/jonathan.jpg" alt="user photo">
+                                </button>
+                             <?php } ?>
 
                             <?php } else {?>
 
@@ -102,7 +110,6 @@ $destroy=$Newtags->destroy();
                                     </a>
                                 </div>
                             </div>
-
                             <?php } ?>
                         </div>
                         <!-- Dropdown menu -->
@@ -159,9 +166,10 @@ $destroy=$Newtags->destroy();
                     <!-- --------------- EndmiddelNav ----------------------------- -->
                 </div>
             </div>
+
             <div class="flex justify-evenly items-center ">
                 <div class="p-4">
-                    <h1 class="text-2xl font-bold">Welcome to my dashboard!</h1>
+                    <h1 class="text-2xl font-bold">Welcome to my dashboard! <?= $_SESSION['username'] ?></h1>
                     <p class="mt-2 text-gray-600">This is an example dashboard using Tailwind CSS.</p>
                 </div>
 
@@ -178,9 +186,9 @@ $destroy=$Newtags->destroy();
                     <div class="mt-7 bg-white  rounded-xl shadow-lg dark:bg-gray-800 dark:border-gray-700 border-2 border-indigo-300">
                         <div class="p-4 sm:p-7">
                             <div class="text-center">
-                                <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Add New Categor</h1>
+                                <h1 class="block text-2xl font-bold text-gray-800 dark:text-white">Add New Tag</h1>
                                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                    Categor_Name
+                                Tag_name
                                 </p>
                             </div>
 
@@ -255,6 +263,8 @@ $destroy=$Newtags->destroy();
         formParent.classList.toggle("hidden");
      })
     </script>
+        <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+
 
 </body>
 

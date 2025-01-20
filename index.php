@@ -1,4 +1,12 @@
 <?php 
+session_start();
+require_once __DIR__ .'/vendor/autoload.php';
+use App\controllers\CoursesController;
+
+$newCours=new CoursesController();
+$cours=$newCours->index();
+// var_dump($cours);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -28,7 +36,7 @@
             <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                 <div class="flex items-center gap-4">
                       <?php if(isset($_SESSION['role'])){ ?>
-                            <?php  if($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'user' || $_SESSION['role'] == 'author') { ?>
+                            <?php  if($_SESSION['role'] == 'Admin' || $_SESSION['role'] == 'Teacher' || $_SESSION['role'] == 'Student') { ?>
                               <button type="button" class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                                 id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
                                 data-dropdown-placement="bottom">
@@ -55,32 +63,36 @@
                         <?php } ?>
                     </div>
                 <!-- Dropdown menu -->
-                <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
-                    id="user-dropdown">
-                    <div class="px-4 py-3">
-                        <span class="block text-sm text-gray-900 dark:text-white inline-block">Bonnie Green</span>
-                        <span class="block text-sm  text-gray-500 truncate dark:text-gray-400 inline-block">name@flowbite.com</span>
+                    <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
+                        id="user-dropdown">
+                        <div class="px-4 py-3">
+                            <span class="block text-sm text-gray-900 dark:text-white inline-block"><?php $_SESSION['username'] ?>
+                                </span>
+                            <span
+                                class="block text-sm  text-gray-500 truncate dark:text-gray-400 inline-block">name@flowbite.com</span>
+                        </div>
+                        <ul class="py-2" aria-labelledby="user-menu-button">
+                        <?php if(isset($_SESSION['role'])){ ?>
+                            <?php  if($_SESSION['role'] == 'Admin') { ?>
+                            <li>
+                                <a href="app/views/Admin/dashboard/dashboard.php"
+                                    class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
+                            </li>
+                            <?php }elseif($_SESSION['role'] == 'Teacher') { ?>
+
+                                <li>
+                                <a href="app/views/Teacher/teacher.php"
+                                    class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
+                            </li>
+                                <?php }else ?>
+                            <li>
+                                <a href="#"
+                                    class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
+                                    out</a>
+                            </li>
+                            <?php } ?>
+                        </ul>
                     </div>
-                    <ul class="py-2" aria-labelledby="user-menu-button">
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
-                        </li>
-                        <li>
-                            <a href="#"
-                                class="block px-4 py-2 text-sm inline-block text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign
-                                out</a>
-                        </li>
-                    </ul>
-                </div>
                 <button data-collapse-toggle="navbar-user" type="button"
                     class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                     aria-controls="navbar-user" aria-expanded="false">
@@ -180,19 +192,21 @@
                             </path>
                         </g>
                     </svg>
-                    <a href="#" class="font-semibold inline-block">Courses</a>
+                    <a href="app/views/pages/Courses.php" class="font-semibold inline-block">Courses</a>
                 </div>
-                <a href="#">See All</a>
+                <a href="app/views/pages/Courses.php">See All</a>
             </div>
 
 
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
                 <!-- CARD 1 -->
+                   <?php foreach($cours as $cour): ?>
                 <div class="rounded overflow-hidden border-indigo-600 flex flex-col shadow-sm transition hover:shadow-lg">
-                    <a href="#"></a>
-                    <div class="relative"><a href="#">
-                            <img class="w-full h-[16rem]" src="app/public/asset/uploads/bg.jpg" alt="Sunset in the mountains">
+                   <a href="app/views/pages/DetailCourse.php?id=<?= $cour['id'] ?>">
+                    <div class="relative">
+                        <a href="#">
+                            <img class="w-full h-[16rem]" src="app/public/asset/uploads/<?= $cour['featured_image'] ?>" alt="Sunset in the mountains">
                             <div class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
                             </div>
                         </a>
@@ -206,6 +220,7 @@
                         <a href="#"
                             class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">HTML, CSS, and Javascript for Web Developers Specialization</a>
                         <p class="text-gray-500 text-sm inline-block">
+                        <?= $cour['title'] ?>
                             Lorem Ipsum is simply dummy text of the printing and typesetting industry.
                         </p>
                     </div>
@@ -223,112 +238,19 @@
                                     </g>
                                 </g>
                             </svg>
-                            <span class="ml-1 inline-block">6 mins ago</span>
+                            <span class="ml-1 inline-block"><?= $cour['created_at'] ?></span>
                         </span>
 
                         <div class="mt-4 p-4 border-t border-gray-200 dark:border-gray-500">
-                            <button
+                            <a href="app/views/pages/DetailCourse.php?id=<?= $cour['id'] ?>"
                                 class="w-full flex justify-between items-center font-bold cursor-pointer hover:underline text-gray-800 dark:text-gray-50">
-                                <span class="text-base inline-block">EnRolle</span>
-                                
-                            </button>
+                                <span class="text-base inline-block">Read More</span>
+                            </a>
                         </div>
                     </div>
+                   </a>
                 </div>
-                <!-- CARD 2 -->
-                <div class="rounded overflow-hidden border-indigo-600 flex flex-col shadow-sm transition hover:shadow-lg">
-                    <a href="#"></a>
-                    <div class="relative"><a href="#">
-                            <img class="w-full h-[16rem]" src="app/public/asset/uploads/pexels-capondesign.jpg" alt="Sunset in the mountains">
-                            <div class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
-                            </div>
-                        </a>
-                        <a href="#!">
-                            <div class="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                                Free
-                            </div>
-                        </a>
-                    </div>
-                    <div class="px-6 py-4 mb-auto">
-                        <a href="#"
-                            class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">HTML, CSS, and Javascript for Web Developers Specialization</a>
-                        <p class="text-gray-500 text-sm inline-block">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                        </p>
-                    </div>
-                    <div class="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
-                        <span href="#" class="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                            <svg height="13px" width="13px" version="1.1" id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                                y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;"
-                                xml:space="preserve">
-                                <g>
-                                    <g>
-                                        <path
-                                            d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z">
-                                        </path>
-                                    </g>
-                                </g>
-                            </svg>
-                            <span class="ml-1 inline-block">6 mins ago</span>
-                        </span>
-
-                        <div class="mt-4 p-4 border-t border-gray-200 dark:border-gray-500">
-                            <button
-                                class="w-full flex justify-between items-center font-bold cursor-pointer hover:underline text-gray-800 dark:text-gray-50">
-                                <span class="text-base inline-block">EnRolle</span>
-                                
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- CARD 3 -->
-                <div class="rounded overflow-hidden border-indigo-600 flex flex-col shadow-sm transition hover:shadow-lg">
-                    <a href="#"></a>
-                    <div class="relative"><a href="#">
-                            <img class="w-full h-[16rem]" src="app/public/asset/uploads/pexels-junior.jpg" alt="Sunset in the mountains">
-                            <div class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25">
-                            </div>
-                        </a>
-                        <a href="#!">
-                            <div class="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
-                                Free
-                            </div>
-                        </a>
-                    </div>
-                    <div class="px-6 py-4 mb-auto">
-                        <a href="#"
-                            class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out inline-block mb-2">HTML, CSS, and Javascript for Web Developers Specialization</a>
-                        <p class="text-gray-500 text-sm inline-block">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                        </p>
-                    </div>
-                    <div class="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
-                        <span href="#" class="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
-                            <svg height="13px" width="13px" version="1.1" id="Layer_1"
-                                xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
-                                y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;"
-                                xml:space="preserve">
-                                <g>
-                                    <g>
-                                        <path
-                                            d="M256,0C114.837,0,0,114.837,0,256s114.837,256,256,256s256-114.837,256-256S397.163,0,256,0z M277.333,256 c0,11.797-9.536,21.333-21.333,21.333h-85.333c-11.797,0-21.333-9.536-21.333-21.333s9.536-21.333,21.333-21.333h64v-128 c0-11.797,9.536-21.333,21.333-21.333s21.333,9.536,21.333,21.333V256z">
-                                        </path>
-                                    </g>
-                                </g>
-                            </svg>
-                            <span class="ml-1 inline-block">6 mins ago</span>
-                        </span>
-
-                        <div class="mt-4 p-4 border-t border-gray-200 dark:border-gray-500">
-                            <button
-                                class="w-full flex justify-between items-center font-bold cursor-pointer hover:underline text-gray-800 dark:text-gray-50">
-                                <span class="text-base inline-block">EnRolle</span>
-                                
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach ?>
             </div>
 
         </div>
@@ -339,20 +261,15 @@
     <div class="flex flex-col justify-center">
 
         <div class="text-center">
-
             <h2 class="font-semibold inline-block text-3xl">Our Sponsors</h2>
-
             <p class="max-w-md mx-auto inline-block mt-2 text-gray-500">
                 We are thankful to each and every company sponsored our
                 plugin which helped us to continue working on it.
             </p>
-
         </div>
 
 
         <div class="flex flex-wrap items-center justify-center gap-10 mt-2 md:justify-around">
-
-
             <div class="text-gray-400 "><svg xmlns="http://www.w3.org/2000/svg" width="120" height="60"
                     fill-rule="evenodd">
                     <g transform="matrix(.06928 0 0 .06928 7.367398 13.505331)" fill="none">

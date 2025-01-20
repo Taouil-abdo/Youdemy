@@ -117,24 +117,24 @@ public static function getData($table,$condetion = ''){
    }
 
        
-   public static function addCourse($table, $columns, $values ,$tags){
+//    public static function addCourse($table, $columns, $values ,$tags){
 
    
-       $conn = Database::getInstanse()->getConnection();
-       $columnsArray = explode(',', $columns);
-       $placeholders = implode(', ', array_fill(0, count($columnsArray), '?'));
+//        $conn = Database::getInstanse()->getConnection();
+//        $columnsArray = explode(',', $columns);
+//        $placeholders = implode(', ', array_fill(0, count($columnsArray), '?'));
  
-       $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
-       $stmt = $conn->prepare($query);
+//        $query = "INSERT INTO $table ($columns) VALUES ($placeholders)";
+//        $stmt = $conn->prepare($query);
 
-         if($stmt->execute($values)){
-           $lastid = $conn->lastInsertId();
-           var_dump($lastid);
-           self::addTagsForCourse($lastid, $tags);
-           return true; 
-       }
+//          if($stmt->execute($values)){
+//            $lastid = $conn->lastInsertId();
+//            var_dump($lastid);
+//            self::addTagsForCourse($lastid, $tags);
+//            return true; 
+//        }
    
-   }
+//    }
 
    public static function addTagsForCourse($lastid, $tags){
        $conn = Database::getInstanse()->getConnection();

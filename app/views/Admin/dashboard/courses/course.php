@@ -1,15 +1,23 @@
-<?php 
-require_once __DIR__."/../../../../../vendor/autoload.php";
+<?php
+require_once __DIR__ . "/../../../../../vendor/autoload.php";
 
+use App\Controllers\coursesController;
+use App\Controllers\TagsController;
 use App\Controllers\CategoriesController;
 
 $NewCaty = new CategoriesController();
-$categories = $NewCaty->show();
-$create= $NewCaty->create();
-$destroy=$NewCaty->destroy();
+$NewCourses = new coursesController();
+$Newtags = new TagsController();
 
+$Categories = $NewCaty->show();
+$Tags = $Newtags->show();
+$courses = $NewCourses->ShowAllCourses();
+$create = $NewCourses->addCourse();
+$accepteCourseByAdmin = $NewCourses->accepteCourseByAdmin();
+// var_dump($accepteCourseByAdmin);
 
- ?>
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,16 +26,15 @@ $destroy=$NewCaty->destroy();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/f01941449c.js" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
-
-    <title>dashboard</title>
+    <title>Courses</title>
 </head>
 
-<body>
+<body class="bg-gray-100">
 
-    <div class="flex h-screen bg-gray-100">
+    <!-- Main Container -->
+    <div class="flex h-screen">
 
-        <!-- sidebar -->
+        <!-- Sidebar -->
         <div class="hidden md:flex flex-col w-64 bg-gray-800">
             <div class="flex items-center justify-center h-16 bg-gray-900">
             <a href="../../../../../index.php"><span class="text-white font-bold uppercase">YouDemy</span></a>
@@ -39,43 +46,34 @@ $destroy=$NewCaty->destroy();
                         <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                     </a>
                     <h3 class="px-4 py-2 text-xs uppercase tracking-wider text-gray-300 font-bold">Manage Users</h3>
-                    <a href="../users/user.php"
-                        class="flex items-center px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
+                    <a href="../users/user.php" class="flex items-center px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
                         <i class="fas fa-users mr-2"></i> Users
                     </a>
                     <h3 class="px-4 py-2 text-xs uppercase tracking-wider text-gray-300 font-bold">Manage Courses</h3>
-                    <a href="../courses/course.php"
-                        class="flex items-center px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
+                    <a href="../courses/course.php" class="flex items-center px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
                         <i class="fas fa-file-alt mr-2"></i> Courses
                     </a>
-                    <h3 class="px-4 py-2 text-xs uppercase tracking-wider text-gray-300 font-bold">Manage Categories
-                    </h3>
-                    <a href="../categories/category.php"
-                        class="flex items-center px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
+                    <h3 class="px-4 py-2 text-xs uppercase tracking-wider text-gray-300 font-bold">Manage Categories</h3>
+                    <a href="../categories/category.php" class="flex items-center px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
                         <i class="fas fa-folder-open mr-2"></i> Categories
                     </a>
-                    <h3 class="px-4 py-2 text-xs uppercase tracking-wider text-gray-300 font-bold">Manage Tags
-                    </h3>
-                    <a href="../tags/tag.php"
-                        class="flex items-center px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
+                    <h3 class="px-4 py-2 text-xs uppercase tracking-wider text-gray-300 font-bold">Manage Tags</h3>
+                    <a href="../tags/tag.php" class="flex items-center px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
                         <i class="fas fa-tags mr-2"></i> Tags
                     </a>
-                    <h3 class="px-4 py-2 text-xs uppercase tracking-wider text-gray-300 font-bold">System Management
-                    </h3>
-
-                    <form method='POST'
-                        class="flex items-center gap-3 px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
+                    <h3 class="px-4 py-2 text-xs uppercase tracking-wider text-gray-300 font-bold">System Management</h3>
+                    <form method='POST' class="flex items-center gap-3 px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <button type="submit" name="logout">Logout</button>
                     </form>
-
                 </nav>
             </div>
         </div>
 
+        <!-- Main Content -->
         <div class="flex flex-col flex-1 overflow-y-auto">
             <!-- Top Navigation -->
-            <div class="bg-white border-gray-200 dark:bg-gray-900">
+              <div class="bg-white border-gray-200 dark:bg-gray-900">
                 <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">                    
                     <!-- --------------- RightNav ----------------------------- -->
                     <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
@@ -167,101 +165,93 @@ $destroy=$NewCaty->destroy();
             </div>
 
 
-            <div class="flex justify-evenly items-center ">
-                <div class="p-4">
-                    <h1 class="text-2xl font-bold">Welcome to my dashboard! <?= $_SESSION['username'] ?></h1>
-                    <p class="mt-2 text-gray-600">This is an example dashboard using Tailwind CSS.</p>
-                </div>
-                <!-- button Ajouter player -->
-                <div class="btnAjouter">
-                    <button id="btnAjouter" class="h-10 w-28 bg-blue-600 text-white rounded shadow-lg">Add Category</button>
-                </div>
+
+            <!-- Dashboard Header -->
+            <div class="p-6">
+                <h1 class="text-2xl font-bold">Welcome to my dashboard! Mr <?= $_SESSION['username'] ?></h1>
+                <p class="mt-2 text-gray-600">This is an example dashboard using Tailwind CSS.</p>
             </div>
 
-            <div class="flex-col w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div id="content" role="main" class="w-full max-w-md mx-auto p-6">
-                    <div class="mt-7 bg-white  rounded-xl shadow-lg dark:bg-gray-800 dark:border-gray-700 border-2 border-indigo-300">
-                        <div class="p-4 sm:p-7">
-                            <div class="text-center">
-                                <h1 class="block text-xl font-bold text-gray-800 dark:text-white">Add Category</h1>
-                                <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                    Category_Name
-                                </p>
-                            </div>
-
-                            <div class="mt-5">
-                                <form method="POST">
-                                    <div class="grid gap-y-4">
-                                        <div>
-                                            <label for="category_name"
-                                                class="block text-sm font-bold ml-1 mb-2 dark:text-white">category_name</label>
-                                            <div class="relative">
-                                                <input type="category_name" id="category_name" name="category_name"
-                                                    class="py-3 px-4 block w-full border-2 border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 shadow-sm"
-                                                    required aria-describedby="category_name-error">
-                                            </div>
-                                        </div>
-                                        <button type="submit" name="addCatgory"
-                                            class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">Add
-                                            Catigory</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- tablue -->
-                <div class="container w-full mx-auto p-4">
-                    <!-- <div class="overflow-x-auto"> -->
-                    <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+            <!-- Courses Table -->
+            <div class="p-6">
+                <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+                    <table class="min-w-full">
                         <thead class="bg-gray-800 text-white">
                             <tr>
-                                <th class="py-2 px-4">id</th>
-                                <th class="py-2 px-4">Tag</th>
-                                <th class="py-2 px-4">Action</th>
+                                <th class="py-2 px-3 text-sm">Course ID</th>
+                                <th class="py-2 px-3 text-sm">Title</th>
+                                <th class="py-2 px-3 text-sm">Content</th>
+                                <th class="py-2 px-3 text-sm">Image</th>
+                                <th class="py-2 px-3 text-sm">Status</th>
+                                <th class="py-2 px-3 text-sm">Level</th>
+                                <th class="py-2 px-3 text-sm">Category</th>
+                                <th class="py-2 px-3 text-sm">Teacher</th>
+                                <th class="py-2 px-3 text-sm">CreatedAt</th>
+                                <th class="py-2 px-3 text-sm">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php
-                    if ($categories) {
-                      foreach($categories as $categorie){
-                  ?>
-                            <tr class="border-b">
-                                <td class="py-2 px-4 text-center"><?= $categorie['id']; ?></td>
-                                <td class="py-2 px-4 text-center"><?= $categorie['categorie_name']; ?></td>
-                                <td class="py-2 px-4 text-center">
-                                    <a href="update.php?id=<?= $categorie['id']; ?>" class="text-blue-500 hover:underline"><i
-                                            class="fa-solid fa-pencil"></i>
-                                    </a> |
-                                    <a href="category.php?id=<?= $categorie['id']; ?>"
-                                        onclick="return confirm('Are you sure you want to delete this player?')"
-                                        class="text-red-500 hover:underline"><i class="fa-solid fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <?php
-                      }
-                      } else {
-                      echo "<tr><td colspan='8' class='py-2 px-4 text-center'>No data available</td></tr>";
-                      }
-                    ?>
+                            <?php if ($courses) : ?>
+                                <?php foreach ($courses as $course) : ?>
+                                    <form method='POST'>
+                                    <tr class="border-b">
+                                        <td class="py-2 px-3 text-sm"><?= $course['id']; ?></td>
+                                        <td class="py-2 px-3 text-sm"><?= $course['title']; ?></td>
+                                        <td class="py-2 px-3 text-sm"><?= $course['content']; ?></td>
+                                        <td class="py-2 px-3 text-sm">
+                                            <img src="../../../../public/asset/uploads/<?= $course['featured_image']; ?>" alt="course" class="w-16 h-16 object-cover rounded">
+                                        </td>
+                                        <td class="py-2 px-3 text-sm">
+                                            <select name="status" id="status">
+                                                <option value="<?= $course['status']; ?>"><?= $course['status']; ?></option>
+                                                <option value="accepted">Accepted</option>
+                                                <option value="refuse">Refuse</option>
+                                            </select>
+                                            
+                                        </td>
+                                        <td class="py-2 px-3 text-sm"><?= $course['level']; ?></td>
+                                        <td class="py-2 px-3 text-sm"><?= $course['categorie_name']; ?></td>
+                                        <td class="py-2 px-3 text-sm"><?= $course['teacher']; ?></td>
+                                        <td class="py-2 px-3 text-sm"><?= $course['created_at']; ?></td>
+                                        <td class="py-2 px-3 text-center text-lg">
+                                            <input type="text" class="hidden" name="Cours_id" value="<?= $course['id']; ?>">
+                                            <button type="submit" name="updateStatus">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </form>
+                                    
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="12" class="py-3 px-4 text-center">No data available</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
-              </div>
             </div>
         </div>
     </div>
 
-        <script>
-         let btnAjouter = document.getElementById("btnAjouter");
-         let formParent = document.getElementById("form-parent");
+    <script>
+        document.getElementById('content_type').addEventListener('change', function() {
+            const contentTypeVideoField = document.getElementById('contentTypeVideoField');
+            const contentTypeDocumentField = document.getElementById('contentTypeDocumentField');
 
-         btnAjouter.addEventListener("click", function() {
-            formParent.classList.toggle("hidden");
-         })
-        </script>
+            if (this.value === 'video') {
+                contentTypeVideoField.style.display = 'block';
+                contentTypeDocumentField.style.display = 'none';
+            } else if (this.value === 'document') {
+                contentTypeVideoField.style.display = 'none';
+                contentTypeDocumentField.style.display = 'block';
+            } else {
+                contentTypeVideoField.style.display = 'none';
+                contentTypeDocumentField.style.display = 'none';
+            }
+        });
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
 
 </body>

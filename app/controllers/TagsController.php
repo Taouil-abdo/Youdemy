@@ -3,6 +3,8 @@
 namespace App\controllers;
 require_once __DIR__ . '/../../vendor/autoload.php';
 use App\models\Tags;
+require_once __DIR__.'/../config/init.php';
+
 
 class TagsController extends Tags {
 
@@ -58,7 +60,10 @@ public function destroy(){
   }
 
 
-
+public function TotalTags(){
+        $tags = $this->countTags();
+        return $tags;
+}
 }
 
 

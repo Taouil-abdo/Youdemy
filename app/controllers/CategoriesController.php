@@ -1,6 +1,8 @@
 <?php
 namespace App\controllers;
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__.'/../config/init.php';
+
 
 use App\models\Categories;
 
@@ -58,7 +60,11 @@ class CategoriesController extends Categories {
           }
       }
     
-    
+    public function TotalCategories(){
+
+        $total = $this->countCategory();
+        return $total;
+    }
     
     }
 

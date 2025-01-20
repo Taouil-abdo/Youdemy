@@ -1,3 +1,31 @@
+<?php
+require_once __DIR__ .'/../../../../vendor/autoload.php';
+use App\controllers\AdminController;
+use App\Controllers\TagsController;
+use App\Controllers\CategoriesController;
+use App\Controllers\CoursesController;
+
+
+$user = new AdminController();
+$tags = new TagsController();
+$Categories = new CategoriesController();
+$Courses = new CoursesController();
+
+$accepteTeacher=$user->accepteTeacher();
+$totalTags = $tags->TotalTags();
+$totalCourse = $Courses->CountCourse();
+
+$totalCategories = $Categories->TotalCategories();
+$totalUsers = $user->CountUsers();
+$rows = $user->show();
+$deleteUser = $user->deleteUser();
+
+
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,6 +34,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/f01941449c.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
     <title>dashboard</title>
 </head>
 
@@ -17,7 +46,7 @@
         <!-- sidebar -->
         <div class="hidden md:flex flex-col w-64 bg-gray-800">
             <div class="flex items-center justify-center h-16 bg-gray-900">
-                <span class="text-white font-bold uppercase">YouDemy</span>
+                <a href="../../../../index.php"><span class="text-white font-bold uppercase">YouDemy</span></a>
             </div>
             <div class="flex flex-col flex-1 overflow-y-auto">
                 <nav class="flex-1 px-4 py-4">
@@ -26,7 +55,7 @@
                         <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
                     </a>
                     <h3 class="px-4 py-2 text-xs uppercase tracking-wider text-gray-300 font-bold">Manage Users</h3>
-                          <a href="Users/User.php"
+                          <a href="users/users.php"
                             class="flex items-center px-4 py-2 mt-2 ml-3 text-gray-500 hover:bg-gray-700 rounded-md">
                             <i class="fas fa-users mr-2"></i> Users
                           </a>
@@ -66,7 +95,7 @@
                     <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
                         <div class="flex items-center gap-4">
                             <?php if(isset($_SESSION['role'])){ ?>
-                            <?php  if($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'user' || $_SESSION['role'] == 'author') { ?>
+                            <?php  if($_SESSION['role'] == 'Admin' || $_SESSION['role'] == 'Teacher' || $_SESSION['role'] == 'Student') { ?>
                             <button type="button"
                                 class="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
                                 id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown"
@@ -150,7 +179,7 @@
             </div>
             <div class="flex justify-evenly items-center ">
                 <div class="p-4">
-                    <h1 class="text-2xl font-bold">Welcome to my dashboard!</h1>
+                    <h1 class="text-2xl font-bold">Welcome to my dashboard! <?= $_SESSION['username'] ?></h1>
                     <p class="mt-2 text-gray-600">This is an example dashboard using Tailwind CSS.</p>
                 </div>
             </div>
@@ -177,7 +206,7 @@
                         </div>
                     </div>
 
-                    <!-- //card Article -->
+                    <!-- //card Courses -->
                     <div
                         class="p-10 sm:p-6 flex justify-center items-center gap-10 bg-white overflow-hidden shadow sm:rounded-lg dark:bg-gray-900">
                         <div id="cercle" class="flex flex-col justify-center items-center ">
@@ -187,9 +216,9 @@
                         </div>
                         <div class="flex flex-col justify-center items-center">
                             <h2 class="text-sm leading-5 font-medium text-gray-500 truncate dark:text-gray-400">Total
-                                Article</h2>
+                                Courses</h2>
                             <p class="mt-1 text-3xl leading-9 font-semibold text-indigo-600 dark:text-indigo-400">
-                                <?php echo $totalTags ?></p>
+                                <?php echo $totalCourse ?></p>
                         </div>
                     </div>
 
@@ -205,7 +234,7 @@
                             <h2 class="text-sm leading-5 font-medium text-gray-500 truncate dark:text-gray-400">Total
                                 Tags</h2>
                             <p class="mt-1 text-3xl leading-9 font-semibold text-indigo-600 dark:text-indigo-400">
-                                <?php echo $totalUsers ?></p>
+                                <?php echo $totalTags ?></p>
                         </div>
                     </div>
 
@@ -221,7 +250,7 @@
                             <h2 class="text-sm leading-5 font-medium text-gray-500 truncate dark:text-gray-400">Total
                                 Categories</h2>
                             <p class="mt-1 text-3xl leading-9 font-semibold text-indigo-600 dark:text-indigo-400">
-                                <?php echo $totalCategor ?></p>
+                                <?php echo $totalCategories ?></p>
                         </div>
                     </div>
                 </div>
@@ -229,7 +258,7 @@
 
 
             <!-- tablue -->
-            <div class="container mx-auto p-4">
+            <div class="container p-4">
                 <div>
                     <h2 class="text-2xl mb-10 font-extrabold tracking-tight text-gray-900 sm:text-2xl dark:text-white">
                         Users Info</h2>
@@ -241,12 +270,13 @@
                             <th class="py-2 px-4">Username</th>
                             <th class="py-2 px-4">Email</th>
                             <th class="py-2 px-4">Role</th>
+                            <th class="py-2 px-4">status</th>
                             <th class="py-2 px-4">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-            if ($rows) {
+              if ($rows) {
                 foreach ($rows as $row) { ?>
                         <form method="POST">
 
@@ -255,13 +285,25 @@
                                 <td class="py-2 px-4"><?= $row['email']; ?></td>
                                 <td class="py-2 px-4">
                                     <select name="role">
+                                        <?php if($row['role'] != 'Admin') { ?>
                                         <option value="<?= $row['role'] ?>"><?= $row['role'] ?>
                                         </option>
-                                        <option value="admin">Admin
+                                        <option value="Teacher">Teacher
                                         </option>
-                                        <option value="author">Author
+                                        <option value="Student">Student
                                         </option>
-                                        <option value="user">User
+                                        <?php } ?>
+                                    </select>
+                                </td>
+                                <td class="py-2 px-4">
+                                    <select name="status">
+                                        <option value="<?= $row['status'] ?>"><?= $row['status'] ?>
+                                        </option>
+                                        <option value="banned">banned
+                                        </option>
+                                        <option value="accepte">accepte
+                                        </option>
+                                        <option value="pendding">pendding
                                         </option>
                                     </select>
                                 </td>
@@ -272,7 +314,7 @@
                                     </button> |
                                     <button type="submit" name="deleteUser"
                                         onclick="return confirm('Are you sure you want to delete this player?')"
-                                        class="text-red-500 hover:underline">>
+                                        class="text-red-500 hover:underline">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </td>
@@ -293,7 +335,8 @@
 
     </div>
 
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+
 </body>
 
 </html>
